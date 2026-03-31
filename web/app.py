@@ -5,8 +5,10 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 from flask import Flask, render_template
 import sqlite3
 import os
-from core.db import DB_PATH
+from core.db import DB_PATH, init_db
 from core.analytics import get_roi_stats
+
+init_db()
 
 app = Flask(__name__)
 
