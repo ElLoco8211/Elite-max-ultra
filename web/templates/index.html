@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Elite Max Dashboard</title>
+</head>
+<body>
+
+<h1>⚽ Elite Max PRO</h1>
+
+<h2>💰 Profit: {{ stats.profit }}€</h2>
+<h3>📊 ROI: {{ stats.roi }}%</h3>
+<h3>🎯 Bets: {{ stats.bets }}</h3>
+
+<hr>
+
+<table border="1">
+<tr>
+<th>Match</th>
+<th>Bet</th>
+<th>Odd</th>
+<th>Stake</th>
+<th>Result</th>
+<th>Profit</th>
+</tr>
+
+{% for b in bets %}
+<tr>
+<td>{{ b[0] }} vs {{ b[1] }}</td>
+<td>{{ b[2] }}</td>
+<td>{{ b[3] }}</td>
+<td>{{ b[4] }}</td>
+<td>{{ b[5] or "pending" }}</td>
+<td>{{ b[6] or 0 }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>
