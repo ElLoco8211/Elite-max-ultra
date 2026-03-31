@@ -6,3 +6,4 @@ schedule
 numpy
 scikit-learn
 joblib
+gunicorn
