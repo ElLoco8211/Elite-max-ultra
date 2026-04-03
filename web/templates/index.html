@@ -1,40 +1,90 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Elite Max Dashboard</title>
+    <title>Elite Max PRO</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            padding: 20px;
+        }
+        .card {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .win { color: #22c55e; }
+        .lose { color: #ef4444; }
+        .pending { color: #facc15; }
+    </style>
 </head>
 <body>
 
 <h1>⚽ Elite Max PRO</h1>
 
-<h2>💰 Profit: {{ stats.profit }}€</h2>
-<h3>📊 ROI: {{ stats.roi }}%</h3>
-<h3>🎯 Bets: {{ stats.bets }}</h3>
+<div class="card">
+    <h2>💰 Profit: {{ stats.profit }}€</h2>
+    <h3>📊 ROI: {{ stats.roi }}%</h3>
+    <h3>🎯 Bets: {{ stats.bets }}</h3>
+</div>
 
-<hr>
-
-<table border="1">
-<tr>
-<th>Match</th>
-<th>Bet</th>
-<th>Odd</th>
-<th>Stake</th>
-<th>Result</th>
-<th>Profit</th>
-</tr>
+<h2>📊 Ultime Bets</h2>
 
 {% for b in bets %}
-<tr>
-<td>{{ b[0] }} vs {{ b[1] }}</td>
-<td>{{ b[2] }}</td>
-<td>{{ b[3] }}</td>
-<td>{{ b[4] }}</td>
-<td>{{ b[5] or "pending" }}</td>
-<td>{{ b[6] or 0 }}</td>
-</tr>
+<div class="card">
+    <strong>{{ b[0] }} vs {{ b[1] }}</strong><br>
+    Bet: {{ b[2] }} @ {{ b[3] }}<br>
+    Stake: {{ b[4] }}€<br>
+
+    {% if b[5] == "win" %}
+        <span class="win">WIN</span>
+    {% elif b[5] == "lose" %}
+        <span class="lose">LOSE</span>
+    {% else %}
+        <span class="pending">PENDING</span>
+    {% endif %}
+
+    <br>Profit: {{ b[6] or 0 }}€
+</div>
 {% endfor %}
 
-</table>
+<h2>📈 Profit Growth</h2>
+<canvas id="chart"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const data = {{ profits | default([]) | safe }};
+
+if (data.length > 0) {
+    new Chart(document.getElementById("chart"), {
+        type: "line",
+        data: {
+            labels: data.map((_, i) => i+1),
+            datasets: [{
+                label: "Profit €",
+                data: data,
+                borderColor: "#22c55e",
+                backgroundColor: "rgba(34,197,94,0.2)",
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    ticks: {
+                        callback: function(value) {
+                            return value + "€";
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+</script>
 
 </body>
 </html>

@@ -12,6 +12,25 @@ init_db()
 
 app = Flask(__name__)
 
+# 🔥 METTI QUI LA FUNZIONE
+def get_profit_history():
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+
+    c.execute("SELECT profit FROM bets WHERE result IS NOT NULL")
+    rows = c.fetchall()
+    conn.close()
+
+    profits = []
+    total = 0
+
+    for r in rows:
+        total += r[0] or 0
+        profits.append(total)
+
+    return profits
+
+
 @app.route("/")
 def home():
     conn = sqlite3.connect(DB_PATH)
@@ -29,8 +48,10 @@ def home():
     conn.close()
 
     stats = get_roi_stats()
+    profits = get_profit_history()
 
-    return render_template("index.html", bets=bets, stats=stats)
+    return render_template("index.html", bets=bets, stats=stats, profits=profits)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
