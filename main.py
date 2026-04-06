@@ -4,7 +4,7 @@ from core.db import DB_PATH, init_db, save_match, save_bet
 from core.value_multi import find_value_multi
 from core.ai_training import train_model
 from core.analytics import get_roi_stats, roi_by_type
-from core.telegram import send
+from core.telegram import send_value_alert
 
 # Init DB prima!
 init_db()
@@ -50,9 +50,8 @@ for m in matches:
             print(f"📊 EDGE: {v['edge']} | PROB: {v['prob']}")
             print(f"💵 STAKE (Kelly): {v['stake']}€")
 
-            # 🚀 TELEGRAM ALERT
-            msg = f"{m['home']} vs {m['away']}\n💰 {v['type']} @ {v['odd']} EDGE {v['edge']}"
-            send(msg)
+            # 🚀 TELEGRAM ALERT PRO
+            send_value_alert(m, v)
 
             print("------------------------------")
 
